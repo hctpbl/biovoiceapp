@@ -2,7 +2,6 @@ package com.hctpbl.biovoiceapp;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,10 +21,6 @@ import android.widget.TextView;
 import com.hctpbl.biovoiceapp.api.APIErrorDialog;
 import com.hctpbl.biovoiceapp.api.BioVoiceAPI;
 import com.hctpbl.biovoiceapp.api.model.VoiceAccessResponse;
-import com.skd.androidrecording.audio.AudioRecordingHandler;
-import com.skd.androidrecording.audio.AudioRecordingThread;
-import com.skd.androidrecording.visualizer.VisualizerView;
-import com.skd.androidrecording.visualizer.renderer.BarGraphRenderer;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,8 +50,6 @@ public class VoiceRecordingFragment extends Fragment{
     private Button mVoiceRecVerify;
 
     private String mFileName;
-    /*private VisualizerView mVisualizerView;
-    private AudioRecordingThread mRecordingThread;*/
     private MediaRecorder mRecorder;
     private boolean mCanRecord = true;
 
@@ -104,9 +97,6 @@ public class VoiceRecordingFragment extends Fragment{
             }
         });
 
-        /*mVisualizerView = (VisualizerView)v.findViewById(R.id.voicerec_visualizer_view);
-        setupVisualizer();*/
-
         mVoiceRecChronometer = (Chronometer)v.findViewById(R.id.voicerec_chronometer);
 
         mVoiceRecEnroll = (Button)v.findViewById(R.id.voicerec_enroll_button);
@@ -151,22 +141,7 @@ public class VoiceRecordingFragment extends Fragment{
     public void onDestroy() {
         super.onDestroy();
         recordStop();
-        //releaseVisualizer();
     }
-
-    /*private void releaseVisualizer() {
-        mVisualizerView.release();
-        mVisualizerView = null;
-    }*/
-
-    /*private void setupVisualizer() {
-        Paint paint = new Paint();
-        paint.setStrokeWidth(5f);
-        paint.setAntiAlias(true);
-        paint.setColor(Color.argb(200, 227, 69, 53));
-        BarGraphRenderer barGraphRendererBottom = new BarGraphRenderer(2, paint, false);
-        mVisualizerView.addRenderer(barGraphRendererBottom);
-    }*/
 
     private void record() {
         if (mCanRecord) {
@@ -190,53 +165,6 @@ public class VoiceRecordingFragment extends Fragment{
         }
 
         mRecorder.start();
-        /*mRecordingThread = new AudioRecordingThread(mFileName, new AudioRecordingHandler() {
-            @Override
-            public void onFftDataCapture(final byte[] bytes) {
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        if (mVisualizerView != null) {
-                            //mVisualizerView.updateVisualizerFFT(bytes);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onRecordSuccess() {
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        mVoiceRecEnroll.setVisibility(View.VISIBLE);
-                        if (mEnrolled) {
-                            mVoiceRecEnroll.setText(R.string.voicerec_reenroll);
-                            mVoiceRecVerify.setVisibility(View.VISIBLE);
-                        }
-                        Log.i(TAG, "Recording successful");
-                    }
-                });
-            }
-
-            @Override
-            public void onRecordingError() {
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        recordStop();
-                        Log.e(TAG, "onRecordingError");
-                    }
-                });
-            }
-
-            @Override
-            public void onRecordSaveError() {
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        recordStop();
-                        Log.e(TAG, "onRecordSaveError");
-                    }
-                });
-            }
-        });
-        mRecordingThread.start();*/
     }
 
     private boolean checkExternalStorageAvailable() {
