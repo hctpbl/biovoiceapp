@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+        android:title="@string/pref_api_title"
+        android:key="pref_key_api">
+        <EditTextPreference
+            android:key="pref_api_url"
+            android:title="@string/pref_api_url"
+            android:defaultValue="192.168.0.80" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/voicerec_relative_layout"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.hctpbl.biovoiceapp.VoiceRecognitionActivity$PlaceholderFragment" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/voicerec_title"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:id="@+id/voicerec_title_text_view"
+        style="@style/Title"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/voicerec_text_text_view"
+        android:layout_below="@id/voicerec_title_text_view"
+        android:text="@string/voicerec_text_notenrolled"/>
+
+    <at.markushi.ui.CircleButton
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_microphone"
+        android:id="@+id/voicerec_record_button"
+        android:layout_below="@id/voicerec_text_text_view"
+        android:layout_centerHorizontal="true"
+        app:cb_color="#ff96cc9e"
+        app:cb_pressed_ring_width="8dip" />
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voicerec_record_button"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp"
+        android:id="@+id/voicerec_chronometer"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/voicerec_buttons_bottom">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/voicerec_enroll_button"
+            android:text="@string/voicerec_enroll"
+            android:visibility="gone"/>
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/voicerec_verify_button"
+            android:text="@string/voicerec_verify"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <!-- <com.skd.androidrecording.visualizer.VisualizerView
+        android:id="@+id/voicerec_visualizer_view"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_above="@id/voicerec_buttons_bottom">
+    </com.skd.androidrecording.visualizer.VisualizerView> -->
+
+</RelativeLayout>

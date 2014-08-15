@@ -1,0 +1,2 @@
+include ':app', ':circleButton'
+include ':androidRecording'

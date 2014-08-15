@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BioVoiceApp</string>
+    <string name="title_activity_user">User registry</string>
+    <string name="title_activity_voice_recognition">Voice recognition</string>
+    
+    <string name="action_register">Register</string>
+    <string name="action_voice_access">Voice Access</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="user_username">Username</string>
+    <string name="user_first_name">First Name</string>
+    <string name="user_surname">Surname</string>
+    <string name="user_email">Email address</string>
+    <string name="user_register">Register user</string>
+    <string name="user_username_validate_required">Username can not be empty</string>
+    <string name="user_first_name_validate_required">First Name can not be empty</string>
+    <string name="user_surname_validate_required">Surname can not be empty</string>
+    <string name="user_email_validate_required">Email address can not be empty</string>
+    <string name="user_username_validate_length">Username must be at least 2 and at most 6 characters long</string>
+    <string name="user_email_validate_valid">You must type a valid email address</string>
+    
+    <string name="pref_title">Settings</string>
+    <string name="pref_api_title">Speaker Verification API</string>
+    <string name="pref_api_url">API URL</string>
+    
+    <string name="general_validation_title">Error connecting to the API</string>
+    <string name="general_validation_generic_message">Unknown error, please, get in contact with the BioVoice team.</string>
+    <string name="general_validation_no_connection">Your device is not connected to the Internet</string>
+    <string name="general_validation_only_wifi">You are not connected to a WiFi network</string>
+    <string name="general_validation_bad_api_url">The URL for the API you have introduced does not seem to be valid. Check API URL in app settings and try again.</string>
+    <string name="general_validation_timeout">Could not connect to BioVoiceAPI. The server may be down or the connection is too slow. Try again in a few minutes or check API URL in app settings.</string>
+    <string name="general_validation_no_server">Could not connect to BioVoiceAPI. Try again in a few minutes or check API URL in app settings.</string>
+    <string name="general_validation_bad_json">The response from the server was not a valid response. Maybe the API URL in the settings is pointing to the wrong server or something is broken.</string>
+    <string name="general_validation_no_storage">There is no external storage available to record audio. Free some memory from your phone or insert an SD card and try again.</string>
+    
+    <string name="regsuc_title">User successfully registered</string>
+    <string name="regsuc_text">The user has been successfully registered in the system with the following data:</string>
+    <string name="regsuc_usr_username">Username: %s</string>
+    <string name="regsuc_usr_first_name">First name: %s</string>
+    <string name="regsuc_usr_surname">Surname: %s</string>
+    <string name="regsuc_usr_email">Email: %s</string>
+    <string name="regsuc_usr_registry_time">Registry time: %s</string>
+    <string name="regsuc_choice">Now, you can either proceed to the enrollment process or go back to the main screen of the app.</string>
+    <string name="regsuc_gomain">Back to main screen</string>
+    <string name="regsuc_goenroll">Voice enrollment</string>
+
+    <string name="voicacc_title">Voice access</string>
+    <string name="voicacc_text">You can enroll or test a user\'s identity. Fill up the username and the system will take care of heading you to the proper action.</string>
+    <string name="voicacc_go">Enter voice access</string>
+
+    <string name="voicerec_title">Voice access for %s</string>
+    <string name="voicerec_text_notenrolled">This user is not enrolled yet, tap on the microphone button to start recording your voice and tap again to stop. Once you have recorded your voice enrollment, will be available. It is highly recommended that you record at least one minute of your voice for the system to generate an accurate model of it.</string>
+    <string name="voicerec_text_enrolled">This user is already enrolled. You can re-enroll its voice or perform the user verification of your voice against him. Tap on the microphone button to start recording your voice and tap again to stop. Once you have recorded your voice, the different actions will be available.</string>
+    <string name="voicerec_enroll">Enroll</string>
+    <string name="voicerec_reenroll">Re-enroll</string>
+    <string name="voicerec_verify">Verify</string>
+
+</resources>
