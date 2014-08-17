@@ -119,7 +119,8 @@ public class VoiceRecordingFragment extends Fragment{
             public void onClick(View view) {
                 try {
                     VoiceAccessResponse response = new VerifyUser().execute().get();
-                    Log.i(TAG, String.valueOf(response.getResult()));
+                    Log.d(TAG, "Threshold: " + String.valueOf(response.getThreshold()));
+                    Log.d(TAG, "Result: " + String.valueOf(response.getResult()));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -202,6 +203,7 @@ public class VoiceRecordingFragment extends Fragment{
     private void stopRecording() {
         if (mRecorder != null) {
             mRecorder.stop();
+            mRecorder.reset();
             mRecorder.release();
             mRecorder = null;
         }
@@ -211,10 +213,6 @@ public class VoiceRecordingFragment extends Fragment{
             mVoiceRecVerify.setVisibility(View.VISIBLE);
         }
         Log.i(TAG, "Recording successful");
-        /*if (mRecordingThread != null) {
-            mRecordingThread.stopRecording();
-            mRecordingThread = null;
-        }*/
     }
 
     private class EnrollUser extends AsyncTask<Void, Void, VoiceAccessResponse> {
