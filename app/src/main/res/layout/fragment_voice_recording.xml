@@ -28,8 +28,8 @@
         android:text="@string/voicerec_text_notenrolled"/>
 
     <at.markushi.ui.CircleButton
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:src="@drawable/ic_microphone"
         android:id="@+id/voicerec_record_button"
         android:layout_below="@id/voicerec_text_text_view"
@@ -69,12 +69,5 @@
             android:visibility="gone"/>
 
     </LinearLayout>
-
-    <!-- <com.skd.androidrecording.visualizer.VisualizerView
-        android:id="@+id/voicerec_visualizer_view"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_above="@id/voicerec_buttons_bottom">
-    </com.skd.androidrecording.visualizer.VisualizerView> -->
 
 </RelativeLayout>

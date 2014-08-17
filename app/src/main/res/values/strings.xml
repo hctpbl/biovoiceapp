@@ -56,5 +56,18 @@
     <string name="voicerec_enroll">Enroll</string>
     <string name="voicerec_reenroll">Re-enroll</string>
     <string name="voicerec_verify">Verify</string>
+    <string name="voicerec_threshold">Threshold</string>
+    <string name="voicerec_result">Result</string>
+
+    <string name="resverif_title">Speaker verification results for %s</string>
+    <string name="resverif_subtitle_positive">Affirmative result</string>
+    <string name="resverif_subtitle_negative">Negative result</string>
+    <string name="resverif_text_positive">The value obtained in the speaker verification process is higher than the declared threshold, so it is likely that the voice sample belongs to the user.</string>
+    <string name="resverif_text_negative">The value obtained in the speaker verification process is lower than the declared threshold, so it is not likely that the voice sample belongs to the user.</string>
+    <string name="resverif_govoicerec">Back to voice recording</string>
+    <string name="resverif_gohome">Back to home screen</string>
+
+    <string name="gendiag_enrolled_title">User successfully enrolled.</string>
+    <string name="gendiag_enrolled_text">The user has been successfully enrolled. You can now re-enroll or perform the speaker verification against the model just created.</string>
 
 </resources>

@@ -2,4 +2,5 @@
 <resources>
     <color name="emphasis">#31b6e7</color>
     <color name="title">#6f7dd9</color>
+    <color name="light_red">#ff4444</color>
 </resources>

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hctpbl.biovoiceapp.api.APIErrorDialog;
@@ -36,6 +37,11 @@ public class VoiceRecordingFragment extends Fragment{
     private static final String TAG = "VoiceRecordingFragment";
 
     private static final String DIALOG_ERROR = "error_dialog_voice_recording";
+    private static final String DIALOG_ENROLLMENT = "enrollment_dialog_voice_recording";
+
+    public static final String EXTRA_VOICEREC_USERNAME = "com.hctpbl.biovoiceapp.voicerec_username";
+    public static final String EXTRA_VOICEREC_RESULT = "com.hctpbl.biovoiceapp.voicerec_result";
+    public static final String EXTRA_VOICEREC_THRESHOLD = "com.hctpbl.biovoiceapp.voicerec_threshold";
 
     private static final String CONTENT_TYPE = "audio/x-m4a";
 
@@ -48,6 +54,7 @@ public class VoiceRecordingFragment extends Fragment{
     private Chronometer mVoiceRecChronometer;
     private Button mVoiceRecEnroll;
     private Button mVoiceRecVerify;
+    private LinearLayout mButtonsBottom;
 
     private String mFileName;
     private MediaRecorder mRecorder;
@@ -105,6 +112,10 @@ public class VoiceRecordingFragment extends Fragment{
             public void onClick(View view) {
                 try {
                     VoiceAccessResponse response = new EnrollUser().execute().get();
+                    if (!response.isError()) {
+                        showEnrolledUserLayout();
+                    }
+                    removeAudioFile();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -119,8 +130,12 @@ public class VoiceRecordingFragment extends Fragment{
             public void onClick(View view) {
                 try {
                     VoiceAccessResponse response = new VerifyUser().execute().get();
+                    if (!response.isError()) {
+                        showResultsPage(response.getThreshold(), response.getResult());
+                    }
                     Log.d(TAG, "Threshold: " + String.valueOf(response.getThreshold()));
                     Log.d(TAG, "Result: " + String.valueOf(response.getResult()));
+                    removeAudioFile();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -129,7 +144,30 @@ public class VoiceRecordingFragment extends Fragment{
             }
         });
 
+        mButtonsBottom = (LinearLayout)v.findViewById(R.id.voicerec_buttons_bottom);
+
         return v;
+    }
+
+    private void showResultsPage(float threshold, float result) {
+        VoiceResultsFragment fragment = VoiceResultsFragment.newInstance(mUsername, threshold, result);
+
+        getFragmentManager().beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.container_voice_recognition, fragment)
+                .commit();
+    }
+
+    private void showEnrolledUserLayout() {
+        mVoiceRecTextTextView.setText(R.string.voicerec_text_enrolled);
+        mButtonsBottom.setVisibility(View.GONE);
+        mEnrolled = true;
+        mVoiceRecChronometer.setBase(SystemClock.elapsedRealtime());
+        new EnrollmentSuccessDialog().show(getFragmentManager(), DIALOG_ENROLLMENT);
+    }
+
+    private void showButtonsBottom() {
+        mButtonsBottom.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -142,6 +180,11 @@ public class VoiceRecordingFragment extends Fragment{
     public void onDestroy() {
         super.onDestroy();
         recordStop();
+    }
+
+    private void removeAudioFile() {
+        File audioFile = new File(mFileName);
+        audioFile.delete();
     }
 
     private void record() {
@@ -207,12 +250,12 @@ public class VoiceRecordingFragment extends Fragment{
             mRecorder.release();
             mRecorder = null;
         }
+        showButtonsBottom();
         mVoiceRecEnroll.setVisibility(View.VISIBLE);
         if (mEnrolled) {
             mVoiceRecEnroll.setText(R.string.voicerec_reenroll);
             mVoiceRecVerify.setVisibility(View.VISIBLE);
         }
-        Log.i(TAG, "Recording successful");
     }
 
     private class EnrollUser extends AsyncTask<Void, Void, VoiceAccessResponse> {

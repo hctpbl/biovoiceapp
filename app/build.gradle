@@ -27,6 +27,7 @@ dependencies {
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
-    compile files('libs/android-saripaar-1.0.3.jar')
+    compile 'com.mobsandgeeks:android-saripaar:1.0.3'
     compile project(':circleButton')
+    compile project(':HoloGraphLibrary')
 }
