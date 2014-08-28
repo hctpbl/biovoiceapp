@@ -1,9 +1,31 @@
 package com.hctpbl.biovoiceapp.api.model;
 
 public class VoiceAccessResponse {
+
+    public static final String ACTION_ENROLL = "enroll";
+    public static final String ACTION_TEST = "test";
+
     private boolean error;
+    private String action;
     private float threshold;
     private float result;
+    private String message;
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public boolean isError() {
         return error;

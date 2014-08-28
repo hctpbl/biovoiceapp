@@ -1,11 +1,13 @@
 package com.hctpbl.biovoiceapp;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -17,10 +19,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hctpbl.biovoiceapp.api.APIErrorDialog;
 import com.hctpbl.biovoiceapp.api.BioVoiceAPI;
+import com.hctpbl.biovoiceapp.api.CountingTypedFile;
+import com.hctpbl.biovoiceapp.api.ProgressListener;
 import com.hctpbl.biovoiceapp.api.model.VoiceAccessResponse;
 
 import java.io.File;
@@ -32,7 +38,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.mime.TypedFile;
 
-public class VoiceRecordingFragment extends Fragment{
+public class VoiceRecordingFragment extends Fragment implements VoiceAccessResponseReceiver {
 
     private static final String TAG = "VoiceRecordingFragment";
 
@@ -52,6 +58,8 @@ public class VoiceRecordingFragment extends Fragment{
     private TextView mVoiceRecTextTextView;
     private CircleButton mVoiceRecRecordButton;
     private Chronometer mVoiceRecChronometer;
+    private ProgressBar mProgressBar;
+    private TextView mUploadProgressTextView;
     private Button mVoiceRecEnroll;
     private Button mVoiceRecVerify;
     private LinearLayout mButtonsBottom;
@@ -59,6 +67,8 @@ public class VoiceRecordingFragment extends Fragment{
     private String mFileName;
     private MediaRecorder mRecorder;
     private boolean mCanRecord = true;
+
+    private PowerManager.WakeLock mWakeLock;
 
     public static VoiceRecordingFragment newInstance(String username, boolean enrolled) {
         Bundle args = new Bundle();
@@ -105,22 +115,18 @@ public class VoiceRecordingFragment extends Fragment{
         });
 
         mVoiceRecChronometer = (Chronometer)v.findViewById(R.id.voicerec_chronometer);
+        mProgressBar = (ProgressBar)v.findViewById(R.id.voicerec_progress_bar);
+        mUploadProgressTextView = (TextView)v.findViewById(R.id.voicerec_upload_progress_text_view);
 
         mVoiceRecEnroll = (Button)v.findViewById(R.id.voicerec_enroll_button);
         mVoiceRecEnroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    VoiceAccessResponse response = new EnrollUser().execute().get();
-                    if (!response.isError()) {
-                        showEnrolledUserLayout();
-                    }
-                    removeAudioFile();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                mProgressBar.setVisibility(View.VISIBLE);
+                mButtonsBottom.setVisibility(View.GONE);
+                VoiceAccessResponseReceiver fragment = (VoiceAccessResponseReceiver)
+                        getFragmentManager().findFragmentById(R.id.container_voice_recognition);
+                new EnrollUser(fragment).execute();
             }
         });
 
@@ -128,23 +134,18 @@ public class VoiceRecordingFragment extends Fragment{
         mVoiceRecVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    VoiceAccessResponse response = new VerifyUser().execute().get();
-                    if (!response.isError()) {
-                        showResultsPage(response.getThreshold(), response.getResult());
-                    }
-                    Log.d(TAG, "Threshold: " + String.valueOf(response.getThreshold()));
-                    Log.d(TAG, "Result: " + String.valueOf(response.getResult()));
-                    removeAudioFile();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                mProgressBar.setVisibility(View.VISIBLE);
+                mButtonsBottom.setVisibility(View.GONE);
+                VoiceAccessResponseReceiver fragment = (VoiceAccessResponseReceiver)
+                        getFragmentManager().findFragmentById(R.id.container_voice_recognition);
+                new VerifyUser(fragment).execute();
             }
         });
 
         mButtonsBottom = (LinearLayout)v.findViewById(R.id.voicerec_buttons_bottom);
+
+        PowerManager powerManager = (PowerManager)getActivity().getSystemService(Context.POWER_SERVICE);
+        mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
 
         return v;
     }
@@ -166,13 +167,16 @@ public class VoiceRecordingFragment extends Fragment{
         new EnrollmentSuccessDialog().show(getFragmentManager(), DIALOG_ENROLLMENT);
     }
 
-    private void showButtonsBottom() {
-        mButtonsBottom.setVisibility(View.VISIBLE);
+    @Override
+    public void onResume() {
+        super.onResume();
+        mWakeLock.acquire();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mWakeLock.release();
         recordStop();
     }
 
@@ -241,6 +245,7 @@ public class VoiceRecordingFragment extends Fragment{
         mVoiceRecChronometer.stop();
         mVoiceRecRecordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone));
         mVoiceRecRecordButton.setColor(Color.argb(200, 150, 204, 158));
+        mButtonsBottom.setVisibility(View.VISIBLE);
     }
 
     private void stopRecording() {
@@ -250,7 +255,6 @@ public class VoiceRecordingFragment extends Fragment{
             mRecorder.release();
             mRecorder = null;
         }
-        showButtonsBottom();
         mVoiceRecEnroll.setVisibility(View.VISIBLE);
         if (mEnrolled) {
             mVoiceRecEnroll.setText(R.string.voicerec_reenroll);
@@ -258,7 +262,14 @@ public class VoiceRecordingFragment extends Fragment{
         }
     }
 
-    private class EnrollUser extends AsyncTask<Void, Void, VoiceAccessResponse> {
+    private class EnrollUser extends AsyncTask<Void, Integer, VoiceAccessResponse> {
+
+        VoiceAccessResponseReceiver mResponseReceiver;
+        long mTotalSize;
+
+        public EnrollUser(VoiceAccessResponseReceiver receiver) {
+            this.mResponseReceiver = receiver;
+        }
 
         @Override
         protected VoiceAccessResponse doInBackground(Void... params) {
@@ -272,23 +283,48 @@ public class VoiceRecordingFragment extends Fragment{
             VoiceAccessResponse response;
             try {
                 File rawAudioFile = new File(mFileName);
-                TypedFile typedAudioFile = new TypedFile(CONTENT_TYPE, rawAudioFile);
+                mTotalSize = rawAudioFile.length();
+                ProgressListener listener = new ProgressListener() {
+                    @Override
+                    public void transferred(long num) {
+                        publishProgress((int) ((num / (float) mTotalSize) * 100));
+                    }
+                };
+                CountingTypedFile typedAudioFile = new CountingTypedFile(CONTENT_TYPE, rawAudioFile, listener);
                 response = api.enrollUser(mUsername, typedAudioFile);
                 return response;
             } catch (RetrofitError re) {
-                /*if (re.isNetworkError()) {
+                if (re.isNetworkError()) {
                     //mErrorMessageId = APIErrorDialog.ERROR_IO;
                 } else if (re.getResponse().getStatus() == 400) {
                     response = (VoiceAccessResponse) re.getBodyAs(VoiceAccessResponse.class);
                     return response;
-                }*/
+                }
                 re.printStackTrace();
             }
             return null;
         }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            Log.d(TAG, "Uploaded: " + String.valueOf(values[0]) + "%");
+            setUploadProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(VoiceAccessResponse voiceAccessResponse) {
+            mResponseReceiver.getVoiceAccessResponse(voiceAccessResponse);
+        }
     }
 
-    private class VerifyUser extends AsyncTask<Void, Void, VoiceAccessResponse> {
+    private class VerifyUser extends AsyncTask<Void, Integer, VoiceAccessResponse> {
+
+        VoiceAccessResponseReceiver mResponseReceiver;
+        long mTotalSize;
+
+        public VerifyUser(VoiceAccessResponseReceiver receiver) {
+            this.mResponseReceiver = receiver;
+        }
 
         @Override
         protected VoiceAccessResponse doInBackground(Void... voids) {
@@ -302,19 +338,61 @@ public class VoiceRecordingFragment extends Fragment{
             VoiceAccessResponse response;
             try {
                 File rawAudioFile = new File(mFileName);
-                TypedFile typedAudioFile = new TypedFile(CONTENT_TYPE, rawAudioFile);
+                mTotalSize = rawAudioFile.length();
+                ProgressListener listener = new ProgressListener() {
+                    @Override
+                    public void transferred(long num) {
+                        publishProgress((int) ((num / (float) mTotalSize) * 100));
+                    }
+                };
+                CountingTypedFile typedAudioFile = new CountingTypedFile(CONTENT_TYPE, rawAudioFile, listener);
                 response = api.testUser(mUsername, typedAudioFile);
                 return response;
             } catch (RetrofitError re) {
-                /*if (re.isNetworkError()) {
+                if (re.isNetworkError()) {
                     //mErrorMessageId = APIErrorDialog.ERROR_IO;
                 } else if (re.getResponse().getStatus() == 400) {
                     response = (VoiceAccessResponse) re.getBodyAs(VoiceAccessResponse.class);
                     return response;
-                }*/
+                }
                 re.printStackTrace();
             }
             return null;
         }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            Log.d(TAG, "Uploaded: " + String.valueOf(values[0]) + "%");
+            setUploadProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(VoiceAccessResponse voiceAccessResponse) {
+            mResponseReceiver.getVoiceAccessResponse(voiceAccessResponse);
+        }
+    }
+
+    private void setUploadProgress(int progress) {
+        mUploadProgressTextView.setText(String.format(
+                        getResources().getString(R.string.voicerec_upload_progress),
+                        String.valueOf(progress)));
+        mProgressBar.setProgress(progress);
+    }
+
+    public void getVoiceAccessResponse(VoiceAccessResponse response) {
+        mProgressBar.setVisibility(View.GONE);
+        if (!response.isError()) {
+            if (response.getAction().equals(VoiceAccessResponse.ACTION_ENROLL)) {
+                showEnrolledUserLayout();
+            } else {
+                showResultsPage(response.getThreshold(), response.getResult());
+            }
+        } else {
+            Toast.makeText(getActivity(), response.getMessage(), Toast.LENGTH_LONG);
+        }
+        mProgressBar.setVisibility(View.GONE);
+        Log.d(TAG, "Threshold: " + String.valueOf(response.getThreshold()));
+        Log.d(TAG, "Result: " + String.valueOf(response.getResult()));
+        removeAudioFile();
     }
 }

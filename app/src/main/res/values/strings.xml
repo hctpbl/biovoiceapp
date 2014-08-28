@@ -53,6 +53,7 @@
     <string name="voicerec_title">Voice access for %s</string>
     <string name="voicerec_text_notenrolled">This user is not enrolled yet, tap on the microphone button to start recording your voice and tap again to stop. Once you have recorded your voice enrollment, will be available. It is highly recommended that you record at least one minute of your voice for the system to generate an accurate model of it.</string>
     <string name="voicerec_text_enrolled">This user is already enrolled. You can re-enroll its voice or perform the user verification of your voice against him. Tap on the microphone button to start recording your voice and tap again to stop. Once you have recorded your voice, the different actions will be available.</string>
+    <string name="voicerec_upload_progress">Uploading (%s%%)</string>
     <string name="voicerec_enroll">Enroll</string>
     <string name="voicerec_reenroll">Re-enroll</string>
     <string name="voicerec_verify">Verify</string>
