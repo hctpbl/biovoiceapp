@@ -388,7 +388,7 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
                 showResultsPage(response.getThreshold(), response.getResult());
             }
         } else {
-            Toast.makeText(getActivity(), response.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), response.getMessage(), Toast.LENGTH_LONG).show();
         }
         mProgressBar.setVisibility(View.GONE);
         Log.d(TAG, "Threshold: " + String.valueOf(response.getThreshold()));
