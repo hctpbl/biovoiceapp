@@ -85,6 +85,8 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         View v = inflater.inflate(R.layout.fragment_voice_recording,
                 container, false);
 
+        setRetainInstance(true);
+
         if (!checkExternalStorageAvailable()) {
             APIErrorDialog.getErrorDialog(APIErrorDialog.ERROR_NO_STORAGE).
                     show(getFragmentManager(), DIALOG_ERROR);

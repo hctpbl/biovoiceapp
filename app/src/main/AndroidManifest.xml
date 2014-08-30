@@ -43,7 +43,9 @@
         <activity
             android:name=".VoiceRecognitionActivity"
             android:label="@string/title_activity_voice_recognition"
-            android:parentActivityName=".BioVoiceAppActivity" >
+            android:parentActivityName=".BioVoiceAppActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboard|orientation" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hctpbl.biovoiceapp.BioVoiceAppActivity" />
