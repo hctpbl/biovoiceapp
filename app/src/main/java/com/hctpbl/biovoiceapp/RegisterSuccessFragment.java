@@ -122,8 +122,9 @@ public class RegisterSuccessFragment extends Fragment {
 	}
 	
 	private void goToEnroll() {
-		Intent i = new Intent(getActivity(), BioVoiceAppActivity.class);
+		Intent i = new Intent(getActivity(), VoiceRecognitionActivity.class);
 		startActivity(i);
+        getActivity().finish();
 	}
 
 }
