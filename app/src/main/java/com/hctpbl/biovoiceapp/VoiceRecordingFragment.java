@@ -125,6 +125,7 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
             @Override
             public void onClick(View view) {
                 mProgressBar.setVisibility(View.VISIBLE);
+                mUploadProgressTextView.setVisibility(View.VISIBLE);
                 mButtonsBottom.setVisibility(View.GONE);
                 VoiceAccessResponseReceiver fragment = (VoiceAccessResponseReceiver)
                         getFragmentManager().findFragmentById(R.id.container_voice_recognition);
@@ -137,6 +138,7 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
             @Override
             public void onClick(View view) {
                 mProgressBar.setVisibility(View.VISIBLE);
+                mUploadProgressTextView.setVisibility(View.VISIBLE);
                 mButtonsBottom.setVisibility(View.GONE);
                 VoiceAccessResponseReceiver fragment = (VoiceAccessResponseReceiver)
                         getFragmentManager().findFragmentById(R.id.container_voice_recognition);
@@ -383,6 +385,7 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
 
     public void getVoiceAccessResponse(VoiceAccessResponse response) {
         mProgressBar.setVisibility(View.GONE);
+        mUploadProgressTextView.setVisibility(View.GONE);
         if (!response.isError()) {
             if (response.getAction().equals(VoiceAccessResponse.ACTION_ENROLL)) {
                 showEnrolledUserLayout();
@@ -392,7 +395,6 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         } else {
             Toast.makeText(getActivity(), response.getMessage(), Toast.LENGTH_LONG).show();
         }
-        mProgressBar.setVisibility(View.GONE);
         Log.d(TAG, "Threshold: " + String.valueOf(response.getThreshold()));
         Log.d(TAG, "Result: " + String.valueOf(response.getResult()));
         removeAudioFile();
