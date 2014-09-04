@@ -16,6 +16,10 @@ import android.widget.TextView;
 
 import com.hctpbl.biovoiceapp.api.model.User;
 
+/**
+ * Fragment to show the user confirmation of his register, and
+ * the data associated to the created user
+ */
 public class RegisterSuccessFragment extends Fragment {
 	
 	private static final String TAG = "RegisterSuccessFragment";
@@ -28,7 +32,13 @@ public class RegisterSuccessFragment extends Fragment {
 	
 	Button mGoMainButton;
 	Button mGoEnrollButton;
-	
+
+    /**
+     * Static method to create an instance of this fragment with the
+     * required parameters
+     * @param user User just registered
+     * @return An instance of RegisterSuccessFragment
+     */
 	public static RegisterSuccessFragment newInstance(User user) {
 		Bundle args = new Bundle();
 		args.putSerializable(UserRegisterFragment.EXTRA_JSON_REGISTRY_SUCCESS,
@@ -76,25 +86,6 @@ public class RegisterSuccessFragment extends Fragment {
                 getResources().getString(R.string.regsuc_usr_registry_time),
                 timeReg
         ));
-		
-		/*try {
-			JSONObject newUser = new JSONObject(usrdata).optJSONObject(UserRegisterFragment.KEY_USER);
-			
-			mUserUsernameTextView.setText(String.format(getResources().getString(R.string.regsuc_usr_username),
-					newUser.getString(UserRegisterFragment.KEY_USER_USERNAME)));
-			mUserFirstNameTextView.setText(String.format(getResources().getString(R.string.regsuc_usr_first_name),
-					newUser.getString(UserRegisterFragment.KEY_USER_FIRSTNAME)));
-			mUserSurnameTextView.setText(String.format(getResources().getString(R.string.regsuc_usr_surname),
-					newUser.getString(UserRegisterFragment.KEY_USER_SURNAME)));
-			mUserEmailTextView.setText(String.format(getResources().getString(R.string.regsuc_usr_email),
-					newUser.getString(UserRegisterFragment.KEY_USER_EMAIL)));
-			mUserRegistryTimeTextView.setText(String.format(getResources().getString(R.string.regsuc_usr_registry_time),
-					newUser.getString(UserRegisterFragment.KEY_USER_REGISTRY_TIME)));
-			
-		} catch (JSONException e) {
-			Log.e(TAG, "Error while parsing just created user JSON, going back to main.");
-			goBackToMain();
-		}*/
 		
 		mGoMainButton = (Button)v.findViewById(R.id.regsuc_gomain);
 		mGoMainButton.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,9 @@
 package com.hctpbl.biovoiceapp.api.model;
 
+/**
+ * Status of a user. If he is registered and if he is
+ * enrolled.
+ */
 public class UserStatus {
     boolean error;
     boolean registered;

@@ -1,5 +1,8 @@
 package com.hctpbl.biovoiceapp.api.model;
 
+/**
+ * Object received once a successful registration has been performed
+ */
 public class NewUserResponse {
     private int http_code;
     private boolean error;

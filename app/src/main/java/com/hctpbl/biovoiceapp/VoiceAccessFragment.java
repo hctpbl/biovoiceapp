@@ -14,7 +14,6 @@ import android.widget.EditText;
 
 import com.hctpbl.biovoiceapp.api.APIConnException;
 import com.hctpbl.biovoiceapp.api.APIErrorDialog;
-import com.hctpbl.biovoiceapp.api.APIHandler;
 import com.hctpbl.biovoiceapp.api.BioVoiceAPI;
 import com.hctpbl.biovoiceapp.api.RetroFitErrorHandler;
 import com.hctpbl.biovoiceapp.api.model.UserStatus;
@@ -35,6 +34,9 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * Fragment to access the voice recording. Asks for a registered user.
+ */
 public class VoiceAccessFragment extends Fragment {
 
     private static final String TAG = "VoiceAccessFragment";
@@ -94,6 +96,9 @@ public class VoiceAccessFragment extends Fragment {
 		return v;
 	}
 
+    /**
+     * Go to voice recognition fragment
+     */
     private void goVoiceRecognition() {
         UserStatus usrStatus;
         try {
@@ -115,6 +120,9 @@ public class VoiceAccessFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates a thread to get the status of a user from the API
+     */
     private class getUserStatus extends AsyncTask<Void, Void, UserStatus> {
 
         @Override
@@ -135,25 +143,6 @@ public class VoiceAccessFragment extends Fragment {
                     mErrorMessageId = APIErrorDialog.ERROR_NO_CONNECTION;
                 }
             }
-//            Log.i(TAG, apiURLstr);
-//
-//            URL apiURL;
-//            try {
-//                apiURL = new URL(apiURLstr);
-//                JSONObject obj = APIHandler.getData(getActivity(), apiURL);
-//                Log.i(TAG, obj.toString());
-//                return obj;
-//            } catch (APIConnException ace) {
-//                mErrorMessageId = APIErrorDialog.ERROR_NO_CONNECTION;
-//            } catch (MalformedURLException mue) {
-//                mErrorMessageId = APIErrorDialog.ERROR_URL;
-//            } catch (SocketTimeoutException ste) {
-//                mErrorMessageId = APIErrorDialog.ERROR_TIMEOUT;
-//            } catch (IOException ioe) {
-//                mErrorMessageId = APIErrorDialog.ERROR_IO;
-//            } catch (JSONException je) {
-//                mErrorMessageId = APIErrorDialog.ERROR_JSON;
-//            }
             return null;
         }
 

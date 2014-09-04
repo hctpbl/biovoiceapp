@@ -8,8 +8,15 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
+/**
+ * Activity for the settings of our app. It only has the API
+ * URL in this first version.
+ */
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-	
+
+    /**
+     * Stores the public URL for the API
+     */
 	public static final String KEY_PREF_API_URL = "pref_api_url";
 
 	@Override

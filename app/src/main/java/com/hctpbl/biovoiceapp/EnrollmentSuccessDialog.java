@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-
+/**
+ * Creates a dialog to inform the user of the fact that
+ * his register process has been successfully completed
+ */
 public class EnrollmentSuccessDialog extends DialogFragment {
 
     @NonNull

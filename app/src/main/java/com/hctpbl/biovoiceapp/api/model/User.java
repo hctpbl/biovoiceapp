@@ -3,6 +3,9 @@ package com.hctpbl.biovoiceapp.api.model;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * User registered in the system
+ */
 public class User implements Serializable{
     private String username;
     private String first_name;

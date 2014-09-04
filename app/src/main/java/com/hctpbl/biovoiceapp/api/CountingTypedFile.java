@@ -7,6 +7,10 @@ import java.io.OutputStream;
 
 import retrofit.mime.TypedFile;
 
+/**
+ * Class to wrap a file to upload, with methods to help
+ * in the process of listening to the upload progress
+ */
 public class CountingTypedFile extends TypedFile {
 
     private static final int BUFFER_SIZE = 4096;

@@ -8,6 +8,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * Activity to host user related fragments
+ */
 public class UserActivity extends ActionBarActivity {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

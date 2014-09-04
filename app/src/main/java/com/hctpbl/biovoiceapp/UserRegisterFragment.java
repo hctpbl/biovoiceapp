@@ -32,6 +32,9 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 
+/**
+ * Fragment to perform the user registration
+ */
 public class UserRegisterFragment extends Fragment {
 	
 	private static final String TAG = "UserRegisterFragment";
@@ -53,7 +56,9 @@ public class UserRegisterFragment extends Fragment {
 	public static final String KEY_USER_ERROR_MESSAGES = "messages";
 	
 	private Validator mValidator;
-	
+
+    // Validation made using saripaar dependency
+
 	@Required(order = 1, messageResId = R.string.user_username_validate_required)
 	@TextRule(order = 2, minLength = 2, maxLength = 6, messageResId = R.string.user_username_validate_length)
 	private EditText mUserUsernameEditText;
@@ -127,18 +132,16 @@ public class UserRegisterFragment extends Fragment {
 		
 		return v;
 	}
-	
+
+    /**
+     * Class to create a thread in which the POST method of the aPI is called to register the user
+     */
 	private class RegisterUser extends AsyncTask<Void, Void, NewUserResponse> {
 		
 		int mErrorMessageId = 0;
 
 		@Override
 		protected NewUserResponse doInBackground(Void... params) {
-//			HashMap<String, String> userData = new HashMap<String, String>();
-//			userData.put(KEY_USER_USERNAME, mUserUsernameEditText.getText().toString());
-//			userData.put(KEY_USER_FIRSTNAME, mUserFirstNameEditText.getText().toString());
-//			userData.put(KEY_USER_SURNAME, mUserSurnameEditText.getText().toString());
-//			userData.put(KEY_USER_EMAIL, mUserEmailEditText.getText().toString());
 			
 			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 			String apiURLstr = sp.getString(SettingsActivity.KEY_PREF_API_URL, "");
@@ -172,25 +175,6 @@ public class UserRegisterFragment extends Fragment {
                     return response;
                 }
             }
-            //---
-			
-//			URL apiURL;
-//			try {
-//                apiURL = new URL(apiURLstr);
-//                JSONObject obj = APIHandler.postData(getActivity(), apiURL, userData);
-//                Log.i(TAG, obj.toString());
-//                return obj;
-//            } catch (APIConnException ace) {
-//                mErrorMessageId = APIErrorDialog.ERROR_NO_CONNECTION;
-//			} catch (MalformedURLException mue) {
-//				mErrorMessageId = APIErrorDialog.ERROR_URL;
-//			} catch (SocketTimeoutException ste) {
-//				mErrorMessageId = APIErrorDialog.ERROR_TIMEOUT;
-//			} catch (IOException ioe) {
-//				mErrorMessageId = APIErrorDialog.ERROR_IO;
-//			} catch (JSONException je) {
-//				mErrorMessageId = APIErrorDialog.ERROR_JSON;
-//			}
 			return null;
 		}
 		
@@ -203,7 +187,12 @@ public class UserRegisterFragment extends Fragment {
 		}
 		
 	}
-	
+
+    /**
+     * Maps JSON error messages received to the different EditTexts
+     * in the form
+     * @param errors
+     */
 	private void mapErrorMessages(ErrorMessages errors) {
         // Solo se coge el primer mensaje de cada array
         List<String> usernameErrors = errors.getUsername();
@@ -226,30 +215,6 @@ public class UserRegisterFragment extends Fragment {
             mUserEmailEditText.setError(emailErrors.get(0));
             mUserEmailEditText.requestFocus();
         }
-//		JSONObject errorMessages = json.getJSONObject(KEY_USER_ERROR_MESSAGES);
-//		for (Iterator<String> iter = errorMessages.keys(); iter.hasNext();) {
-//			String key = iter.next();
-//			// Cogemos siempre el primer error del array de errores
-//			String errorMessage = errorMessages.getJSONArray(key).getString(0);
-//			switch (key) {
-//			case KEY_USER_USERNAME:
-//				mUserUsernameEditText.setError(errorMessage);
-//				mUserUsernameEditText.requestFocus();
-//				break;
-//			case KEY_USER_EMAIL:
-//				mUserEmailEditText.setError(errorMessage);
-//				mUserEmailEditText.requestFocus();
-//				break;
-//			case KEY_USER_FIRSTNAME:
-//				mUserFirstNameEditText.setError(errorMessage);
-//				mUserFirstNameEditText.requestFocus();
-//				break;
-//			case KEY_USER_SURNAME:
-//				mUserSurnameEditText.setError(errorMessage);
-//				mUserSurnameEditText.requestFocus();
-//				break;
-//			}
-//		}
 	}
 
 }

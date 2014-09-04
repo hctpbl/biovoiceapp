@@ -9,6 +9,9 @@ import android.util.Log;
 import com.hctpbl.biovoiceapp.R;
 import com.hctpbl.biovoiceapp.UserRegisterFragment;
 
+/**
+ * Fragment dialog to show API errors
+ */
 public class APIErrorDialog extends DialogFragment {
 	
 	private static final String TAG = "APIErrorDialog";

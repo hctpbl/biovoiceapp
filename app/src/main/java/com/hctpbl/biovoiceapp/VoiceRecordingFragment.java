@@ -38,6 +38,9 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.mime.TypedFile;
 
+/**
+ * Fragment to record user audio and send it to the API
+ */
 public class VoiceRecordingFragment extends Fragment implements VoiceAccessResponseReceiver {
 
     private static final String TAG = "VoiceRecordingFragment";
@@ -70,6 +73,12 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
 
     private PowerManager.WakeLock mWakeLock;
 
+    /**
+     * Creates an instance receiving every parameter needed for the fragment
+     * @param username The name of the user to make voice operations with
+     * @param enrolled Whether the user is already enrolled or not
+     * @return An instance of VoiceRecordingFragment
+     */
     public static VoiceRecordingFragment newInstance(String username, boolean enrolled) {
         Bundle args = new Bundle();
         args.putSerializable(VoiceAccessFragment.EXTRA_VOICEACC_USERNAME, username);
@@ -154,6 +163,11 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         return v;
     }
 
+    /**
+     * Loads a fragment with the results of a user verification
+     * @param threshold
+     * @param result
+     */
     private void showResultsPage(float threshold, float result) {
         VoiceResultsFragment fragment = VoiceResultsFragment.newInstance(mUsername, threshold, result);
 
@@ -163,6 +177,9 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
                 .commit();
     }
 
+    /**
+     * Shows the layout for the enrolled users
+     */
     private void showEnrolledUserLayout() {
         mVoiceRecTextTextView.setText(R.string.voicerec_text_enrolled);
         mButtonsBottom.setVisibility(View.GONE);
@@ -190,11 +207,18 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         recordStop();
     }
 
+    /**
+     * removes an audio file from the device
+     */
     private void removeAudioFile() {
         File audioFile = new File(mFileName);
         audioFile.delete();
     }
 
+    /**
+     * Starts the recording process, it it has not been initialized.
+     * Otherwise, it stops it
+     */
     private void record() {
         if (mCanRecord) {
             recordStart();
@@ -203,6 +227,9 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         }
     }
 
+    /**
+     * Creates a media recorder and starts recording an audio file
+     */
     private void startRecording() {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -219,6 +246,10 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         mRecorder.start();
     }
 
+    /**
+     * Checks if the external storage is avalilable
+     * @return
+     */
     private boolean checkExternalStorageAvailable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -228,7 +259,9 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         }
     }
 
-
+    /**
+     * Adapts the interface to a recording start event
+     */
     private void recordStart() {
         startRecording();
         Log.i(TAG, "Recording started");
@@ -242,6 +275,9 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         mVoiceRecVerify.setVisibility(View.GONE);
     }
 
+    /**
+     * Adapts the interface to a recording stop event
+     */
     private void recordStop() {
         stopRecording();
         Log.i(TAG, "Recording stopped");
@@ -252,6 +288,9 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         mButtonsBottom.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Stops the recording process and saves the file in the external storage
+     */
     private void stopRecording() {
         if (mRecorder != null) {
             mRecorder.stop();
@@ -266,6 +305,9 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         }
     }
 
+    /**
+     * Creates a thread to enroll a user in the system
+     */
     private class EnrollUser extends AsyncTask<Void, Integer, VoiceAccessResponse> {
 
         VoiceAccessResponseReceiver mResponseReceiver;
@@ -321,6 +363,9 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         }
     }
 
+    /**
+     * Creates a thread to verify a user
+     */
     private class VerifyUser extends AsyncTask<Void, Integer, VoiceAccessResponse> {
 
         VoiceAccessResponseReceiver mResponseReceiver;
@@ -376,6 +421,10 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         }
     }
 
+    /**
+     * Updates the upload progress of a loading file
+     * @param progress
+     */
     private void setUploadProgress(int progress) {
         mUploadProgressTextView.setText(String.format(
                         getResources().getString(R.string.voicerec_upload_progress),
@@ -383,6 +432,11 @@ public class VoiceRecordingFragment extends Fragment implements VoiceAccessRespo
         mProgressBar.setProgress(progress);
     }
 
+    /**
+     * Gets the response to the enrollment or verification. The thread responsible for the
+     * HTTP request (the AsyncTask) calls this method.
+     * @param response The response to a enrollment or verification action
+     */
     public void getVoiceAccessResponse(VoiceAccessResponse response) {
         mProgressBar.setVisibility(View.GONE);
         mUploadProgressTextView.setVisibility(View.GONE);

@@ -16,7 +16,9 @@ import com.echo.holographlibrary.BarGraph;
 
 import java.util.ArrayList;
 
-
+/**
+ * Shows the result of a user verification request
+ */
 public class VoiceResultsFragment extends Fragment {
 
     private String mUsername;
@@ -30,6 +32,13 @@ public class VoiceResultsFragment extends Fragment {
     private Button mGoHomeButton;
     private Button mGoEnrollButton;
 
+    /**
+     * Creates an instance of this fragment with all necessary data
+     * @param username The username of the verified user
+     * @param threshold General threshold of the system
+     * @param result Value of the verification
+     * @return
+     */
     public static VoiceResultsFragment newInstance(String username, float threshold, float result) {
         Bundle args = new Bundle();
         args.putString(VoiceRecordingFragment.EXTRA_VOICEREC_USERNAME, username);
@@ -61,7 +70,7 @@ public class VoiceResultsFragment extends Fragment {
         }
 
         mResultsChart = (BarGraph)v.findViewById(R.id.resverif_results_chart);
-        setResultsCharValues();
+        setResultsChartValues();
 
         mGoHomeButton = (Button)v.findViewById(R.id.resverif_gohome_button);
         mGoHomeButton.setOnClickListener(new View.OnClickListener() {
@@ -82,13 +91,19 @@ public class VoiceResultsFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Go back to main screen
+     */
     private void goBackToMain() {
         Intent i = new Intent(getActivity(), BioVoiceAppActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
 
-    private void setResultsCharValues() {
+    /**
+     * Sets the values and colors for the chars
+     */
+    private void setResultsChartValues() {
 
         Bar thresholdBar = new Bar();
         thresholdBar.setColor(Color.BLUE);

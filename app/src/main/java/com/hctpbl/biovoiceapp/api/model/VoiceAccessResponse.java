@@ -1,5 +1,9 @@
 package com.hctpbl.biovoiceapp.api.model;
 
+/**
+ * Response to a voice access request. It can be of type
+ * enrollment or verification
+ */
 public class VoiceAccessResponse {
 
     public static final String ACTION_ENROLL = "enroll";

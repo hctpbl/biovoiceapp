@@ -9,15 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+/**
+ * Fragment that shows the main screen to the user, letting him choose
+ * the two basic groups of actions: Register and Voice access
+ */
 public class BioVoiceAppFragment extends Fragment {
-	
+
 	FragmentManager fm;
 	
 	private Button mRegisterButton;
 	private Button mVoiceAccessButton;
-
-	public BioVoiceAppFragment() {
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

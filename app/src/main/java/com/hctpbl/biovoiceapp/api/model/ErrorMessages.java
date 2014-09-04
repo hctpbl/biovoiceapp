@@ -2,6 +2,9 @@ package com.hctpbl.biovoiceapp.api.model;
 
 import java.util.List;
 
+/**
+ * Error messages for an attemp to register a user
+ */
 public class ErrorMessages {
     private List<String> username;
     private List<String> first_name;
